@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>VideoKu - Streaming</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #111;
+    color: white;
+}
+
+/* HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #222;
+}
+
+header h1 {
+    color: #ff3c3c;
+}
+
+input {
+    padding: 8px;
+    width: 200px;
+    border-radius: 5px;
+    border: none;
+}
+
+/* LAYOUT */
+.container {
+    display: flex;
+}
+
+/* SIDEBAR */
+aside {
+    width: 200px;
+    background: #1a1a1a;
+    padding: 10px;
+}
+
+aside ul {
+    list-style: none;
+    padding: 0;
+}
+
+aside li {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+aside li:hover {
+    background: #333;
+}
+
+/* MAIN */
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* VIDEO PLAYER */
+#videoPlayer video {
+    width: 100%;
+    max-height: 400px;
+    border-radius: 10px;
+}
+
+/* VIDEO LIST */
+.video-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.video-item {
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.video-item:hover {
+    transform: scale(1.05);
+}
+
+.video-item img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.video-item p {
+    font-size: 14px;
+    margin-top: 5px;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+    <h1>🎬 VideoKu</h1>
+    <input type="text" id="search" placeholder="Cari video...">
+</header>
+
+<div class="container">
+
+    <aside>
+        <h3>Kategori</h3>
+        <ul>
+            <li onclick="filterKategori('semua')">Semua</li>
+            <li onclick="filterKategori('musik')">Musik</li>
+            <li onclick="filterKategori('edukasi')">Edukasi</li>
+            <li onclick="filterKategori('film')">Film</li>
+        </ul>
+    </aside>
+
+    <main>
+        <div id="videoPlayer">
+            <video id="mainVideo" controls>
+                <source src="video4.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="video-list" id="videoList"></div>
+    </main>
+
+</div>
+
+<script>
+const videos = [
+    {
+       
+        title: "video Pendek",
+        src: "video3.mp4",
+        thumbnail: "https://via.placeholder.com/300x200?text=Film",
+        kategori: "film"
+    }
+];
+
+const videoList = document.getElementById("videoList");
+const mainVideo = document.getElementById("mainVideo");
+const search = document.getElementById("search");
+
+/* TAMPILKAN VIDEO */
+function tampilkanVideo(list) {
+    videoList.innerHTML = "";
+    list.forEach(video => {
+        const div = document.createElement("div");
+        div.classList.add("video-item");
+
+        div.innerHTML = `
+            <img src="${video.thumbnail}">
+            <p>${video.title}</p>
+        `;
+
+        div.onclick = () => {
+            mainVideo.src = video.src;
+            mainVideo.play();
+        };
+
+        videoList.appendChild(div);
+    });
+}
+
+/* SEARCH */
+search.addEventListener("input", () => {
+    const keyword = search.value.toLowerCase();
+    const hasil = videos.filter(v =>
+        v.title.toLowerCase().includes(keyword)
+    );
+    tampilkanVideo(hasil);
+});
+
+/* FILTER KATEGORI */
+function filterKategori(kategori) {
+    if (kategori === "semua") {
+        tampilkanVideo(videos);
+    } else {
+        const hasil = videos.filter(v => v.kategori === kategori);
+        tampilkanVideo(hasil);
+    }
+}
+
+/* LOAD AWAL */
+tampilkanVideo(videos);
+</script>
+
+</body>
+</html>
